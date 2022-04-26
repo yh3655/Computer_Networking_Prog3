@@ -57,6 +57,7 @@ def sendOnePing(mySocket, destAddr, ID):
     # struct -- Interpret strings as packed binary data
     header = struct.pack("bbHHh", ICMP_ECHO_REQUEST, 0, myChecksum, ID, 1)
     data = struct.pack("d", time.time())
+    print(time.time())
     # Calculate the checksum on the data and the dummy header.
     myChecksum = checksum(header + data)
     # Get the right checksum, and put in the header
@@ -94,7 +95,7 @@ def ping(host, timeout=1):
         result = doOnePing(dest, timeout)
         resps.append(result)
         time.sleep(1) # one second
-        return resps
+    return resps
 
 if __name__ == '__main__':
     ping("127.0.0.1")
