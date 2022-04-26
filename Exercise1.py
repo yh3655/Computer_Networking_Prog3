@@ -40,6 +40,16 @@ def receiveOnePing(mySocket, ID, timeout, destAddr):
         header = recPacket[20:28]
         icmpType, code, mychecksum, packetID, sequence = struct.unpack("bbHHh", header)
         #Fetch the ICMP header from the IP packet
+        if icmpType == 3:
+            print("Destination Unreachable error, code:", code)
+        if icmpType == 5:
+            print("Redirect error, code:", code)
+        if icmpType == 11:
+            print("Time exceeded error, code:", code)
+        if icmpType == 12:
+            print("Parameter error, code:", code)
+        if icmpType == 4:
+            print("Source Quench error, code:", code)
         if packetID == ID:
             bytesinDbl = struct.calcsize("d")
             timeSent = struct.unpack("d", recPacket[28:28 + bytesinDbl])[0]
@@ -97,4 +107,8 @@ def ping(host, timeout=1):
     return resps
 
 if __name__ == '__main__':
-    ping("127.0.0.1")
+    results = ping("127.0.0.1")
+    rtts = []
+    for ele in results:
+        rtts.append(ele[0])
+    print("Min RTT:", min(rtts), " Max RTT:", max(rtts), " Avg. RTT:", sum(rtts) / len(rtts))
